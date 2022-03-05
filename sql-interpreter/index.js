@@ -3,7 +3,7 @@
  * SELECT name, age FROM persons WHERE age > 100
  */
 const { createToken, Lexer, CstParser } = require('chevrotain');
-const { writeFile } = require('./utils');
+const { writeFile } = require('../utils');
 const input = 'SELECT id, name FROM users WHERE id > 124';
 
 const Identifier = createToken({ name: 'Identifier', pattern: /[a-zA-Z]\w*/ });

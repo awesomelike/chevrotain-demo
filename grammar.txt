@@ -1,0 +1,20 @@
+selectStatement
+   : selectClause fromClause (whereClause)?
+
+selectClause
+   : "SELECT" Identifier ("," Identifier)*
+
+fromClause
+   : "FROM" Identifier
+
+whereClause
+   : "WHERE" expression
+
+expression
+   : atomicExpression relationalOperator atomicExpression
+
+atomicExpression
+   : Integer | Identifier
+
+relationalOperator
+   : ">" | "<"

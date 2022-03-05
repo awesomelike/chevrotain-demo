@@ -1,0 +1,23 @@
+{
+  "type": "SELECT_STMT",
+  "selectClause": {
+    "type": "SELECT_CLAUSE",
+    "columns": [
+      "id",
+      "name"
+    ]
+  },
+  "fromClause": {
+    "type": "FROM_CLAUSE",
+    "table": "users"
+  },
+  "whereClause": {
+    "type": "WHERE_CLAUSE",
+    "condition": {
+      "type": "EXPRESSION",
+      "lhs": "id",
+      "operator": ">",
+      "rhs": "124"
+    }
+  }
+}

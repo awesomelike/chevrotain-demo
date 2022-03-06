@@ -4,6 +4,20 @@ const {
   tokenMatcher,
   CstParser
 } = require('chevrotain');
+const numberToWords = require('number-to-words');
+
+const wordToNum = {
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+  seven: 7,
+  eight: 8,
+  nine: 9,
+  zero: 0
+}
 
 const AdditionOperator = createToken({
   name: "AdditionOperator",
@@ -11,12 +25,12 @@ const AdditionOperator = createToken({
 });
 const Plus = createToken({
   name: "Plus",
-  pattern: /\+/,
+  pattern: /\+|plus/,
   categories: AdditionOperator
 });
 const Minus = createToken({
   name: "Minus",
-  pattern: /-/,
+  pattern: /-|minus/,
   categories: AdditionOperator
 });
 
@@ -26,12 +40,12 @@ const MultiplicationOperator = createToken({
 });
 const Multi = createToken({
   name: "Multi",
-  pattern: /\*/,
+  pattern: /\*|times/,
   categories: MultiplicationOperator
 });
 const Div = createToken({
   name: "Div",
-  pattern: /\//,
+  pattern: /\/|by/,
   categories: MultiplicationOperator
 });
 
@@ -45,7 +59,7 @@ const RParen = createToken({
 });
 const NumberLiteral = createToken({
   name: "NumberLiteral",
-  pattern: /[1-9]\d*/
+  pattern: new RegExp(`[1-9]\d*|${Object.keys(wordToNum).join('|')}`)
 });
 
 const PowerFunc = createToken({
@@ -173,7 +187,12 @@ class CalculatorInterpreter extends BaseCstVisitor {
       return this.visit(ctx.parenthesisExpression);
     }
     if (ctx.NumberLiteral) {
-      return parseInt(ctx.NumberLiteral[0].image, 10);
+      const { image } = ctx.NumberLiteral[0];
+      const normalNumber = parseInt(image, 10);
+      if (isNaN(normalNumber)) {
+        return wordToNum[image];
+      }
+      return normalNumber;
     }
     if (ctx.powerFunction) {
       return this.visit(ctx.powerFunction);
@@ -201,4 +220,4 @@ if (!INPUT) {
 parser.input = calculatorLexer.tokenize(INPUT)?.tokens || [];
 const calculatorInterpreter = new CalculatorInterpreter();
 
-console.log(calculatorInterpreter.visit(parser.expression()));
+console.log(numberToWords.toWords(calculatorInterpreter.visit(parser.expression())));
